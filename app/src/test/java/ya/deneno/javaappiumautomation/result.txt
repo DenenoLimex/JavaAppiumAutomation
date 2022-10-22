@@ -1,3 +1,0 @@
-окт. 15, 2022 6:52:23 PM org.openqa.selenium.remote.ProtocolHandshake createSession
-INFO: Detected dialect: OSS
-First test run
