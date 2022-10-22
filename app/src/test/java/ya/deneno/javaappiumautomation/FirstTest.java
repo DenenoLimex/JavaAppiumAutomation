@@ -139,6 +139,39 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void checkCountOfElementsBySearch() {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                "Java",
+                "Cannot find 'Search…' input",
+                5
+        );
+        Assert.assertTrue(
+                "Count of element < 2",
+                waitForAllElementsPresent(
+                        By.xpath("//*[@resource-id ='org.wikipedia:id/page_list_item_container']"),
+                        "Cannot find result of search",
+                        15
+                ).size() > 1
+        );
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/search_cab_view"),
+                "Cannot find search field",
+                5
+        );
+        waitForElementNotPresent(
+                By.xpath("//*[@resource-id ='org.wikipedia:id/page_list_item_container']"),
+                "Result of search is still present on the page",
+                5
+        );
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage) {
         return waitForElementPresent(by, errorMessage, 5);
     }
@@ -180,5 +213,11 @@ public class FirstTest {
                 waitForElementPresent(by, errorMessage).getAttribute("text"),
                 value
         );
+    }
+
+    private List<WebElement> waitForAllElementsPresent(By by, String errorMessage, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(errorMessage + "\n");
+        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
     }
 }
