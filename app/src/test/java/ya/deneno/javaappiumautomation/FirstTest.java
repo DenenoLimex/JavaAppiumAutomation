@@ -176,6 +176,33 @@ public class FirstTest {
         return waitForElementPresent(by, errorMessage, 5);
     }
 
+    @Test
+    public void checkTextElementsBySearch() {
+        String value = "Java";
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                value,
+                "Cannot find 'Search…' input",
+                5
+        );
+        List<WebElement> elements = waitForAllElementsPresent(
+                By.xpath("//*[@resource-id ='org.wikipedia:id/page_list_item_title']"),
+                "Cannot find result of search",
+                5
+        );
+        for (WebElement element : elements) {
+            Assert.assertTrue(
+                    "Some of search result not contains '" + value+"'",
+                    element.getAttribute("text").contains(value)
+            );
+        }
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
