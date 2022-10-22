@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
@@ -118,6 +119,26 @@ public class FirstTest {
         Assert.assertEquals("Article title not equals", titleArticle, "Java (programming language)");
     }
 
+
+    @Test
+    public void checkTextForElementSearchField() {
+        assertElementHasText(
+                By.xpath("//*[@resource-id ='org.wikipedia:id/search_container']//*[@class='android.widget.TextView']"),
+                "Search Wikipedia",
+                "Search field text not equals 'Search Wikipedia'"
+        );
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        assertElementHasText(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Search…",
+                "Search field text not equals 'Search…'"
+        );
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage) {
         return waitForElementPresent(by, errorMessage, 5);
     }
@@ -151,5 +172,13 @@ public class FirstTest {
         WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         element.clear();
         return element;
+    }
+
+    private void assertElementHasText(By by, String value, String errorMessage) {
+        Assert.assertEquals(
+                "ElementText not equals expected value",
+                waitForElementPresent(by, errorMessage).getAttribute("text"),
+                value
+        );
     }
 }
