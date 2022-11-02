@@ -312,6 +312,7 @@ public class FirstTest {
     }
 
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
+        sleep();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
@@ -331,6 +332,7 @@ public class FirstTest {
     }
 
     private boolean waitForElementNotPresent(By by, String errorMessage, long timeoutInSeconds) {
+        sleep();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
@@ -351,6 +353,7 @@ public class FirstTest {
     }
 
     private List<WebElement> waitForAllElementsPresent(By by, String errorMessage, long timeoutInSeconds) {
+        sleep();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
@@ -390,5 +393,14 @@ public class FirstTest {
         int middleY = (upperY + lowerY) / 2;
         TouchAction action = new TouchAction(driver);
         action.press(rightX, middleY).waitAction(300).moveTo(leftX, middleY).release().perform();
+    }
+
+
+    private void sleep() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
