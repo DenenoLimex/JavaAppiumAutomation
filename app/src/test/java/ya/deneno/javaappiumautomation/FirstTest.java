@@ -1,7 +1,5 @@
 package ya.deneno.javaappiumautomation;
 
-import android.util.Log;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -307,6 +305,58 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void testAmountOfNotEmptySearch() {
+        String search = "Linkin Park Discography";
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                search,
+                "Cannot find 'Search…' input",
+                5
+        );
+        String xpath = "//*[@resource-id ='org.wikipedia:id/search_results_list']//*[@resource-id ='org.wikipedia:id/page_list_item_container']";
+        waitForElementPresent(
+                By.xpath(xpath),
+                "Cannot find 'page_list_item_container' input for value = " + search,
+                15
+        );
+        Assert.assertTrue(
+                "Count of element is 0",
+                getAmountOfElements(By.xpath(xpath)) > 0
+        );
+    }
+
+    @Test
+    public void testAmountOfEmptySearch() {
+        String search = "zxvzxvzxcvzxcvzxcv";
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                search,
+                "Cannot find 'Search…' input",
+                5
+        );
+        waitForElementPresent(
+                By.xpath("//*[@text='No results found']"),
+                "Cannot find 'No results found'",
+                15
+        );
+        String xpath = "//*[@resource-id ='org.wikipedia:id/search_results_list']//*[@resource-id ='org.wikipedia:id/page_list_item_container']";
+        assertElementNotPresent(
+                By.xpath(xpath),
+                "Count of element with request '" +search + "' > 0"
+        );
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage) {
         return waitForElementPresent(by, errorMessage, 5);
     }
@@ -388,19 +438,31 @@ public class FirstTest {
         WebElement element = waitForElementPresent(by, errorMessage, 15);
         int leftX = element.getLocation().x;
         int rightX = leftX + element.getSize().width;
-        int upperY = element.getLocation().y ;
+        int upperY = element.getLocation().y;
         int lowerY = upperY + element.getSize().height;
         int middleY = (upperY + lowerY) / 2;
         TouchAction action = new TouchAction(driver);
         action.press(rightX, middleY).waitAction(300).moveTo(leftX, middleY).release().perform();
     }
 
-
     private void sleep() {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    private int getAmountOfElements(By by) {
+        List elements = driver.findElements(by);
+        return elements.size();
+    }
+
+    private void assertElementNotPresent(By by, String errorMessage) {
+        int amount = getAmountOfElements(by);
+        if (amount > 0) {
+            String defaultMessage = "An element '" + by.toString() + "' supposed to be not present";
+            throw new AssertionError(defaultMessage + " " + errorMessage);
         }
     }
 }
