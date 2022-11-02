@@ -409,6 +409,33 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void testCheckSearchArticleInBackground() {
+        String search = "Java";
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                search,
+                "Cannot find 'Search…' input",
+                5
+        );
+        waitForElementPresent(
+                By.xpath("//*[@resource-id ='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "Cannot find search 'Object-oriented programming language' topic searching by 'Java'",
+                5
+        );
+        driver.runAppInBackground(2);
+        waitForElementPresent(
+                By.xpath("//*[@resource-id ='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "Cannot find search 'Object-oriented programming language' topic searching by 'Java' after returning background",
+                5
+        );
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage) {
         return waitForElementPresent(by, errorMessage, 5);
     }
