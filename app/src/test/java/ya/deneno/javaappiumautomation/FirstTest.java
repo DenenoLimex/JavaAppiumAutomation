@@ -436,6 +436,122 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void saveTwoArticleForMyListAndDeleteOne() {
+        String searchFirst = "Java (programming language)";
+        String searchSecond = "Kotlin (programming language)";
+        String listName = "Learning programming";
+        searchArticleAndOpenViewSaveToList(searchFirst);
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/onboarding_button"),
+                "Cannot find 'Got it' button",
+                5
+        );
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/text_input"),
+                "Cannot find 'text_input' field",
+                5
+        );
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/text_input"),
+                listName,
+                "Cannot find 'text_input' field",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='OK']"),
+                "Cannot find 'OK' button",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@content-desc='Navigate up']"),
+                "Cannot find 'X' button",
+                5
+        );
+
+        searchArticleAndOpenViewSaveToList(searchSecond);
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/item_title"),
+                "Cannot find list with name '" + listName + "'",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@content-desc='Navigate up']"),
+                "Cannot find 'X' button",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@content-desc='My lists']"),
+                "Cannot find 'My lists' button",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + listName + "']"),
+                "Cannot find list with title '" + listName + "'",
+                5
+        );
+
+        swipeElementToLeft(
+                By.xpath("//*[@text='" + searchFirst + "']"),
+                "Cannot find list item with title '" + searchFirst + "'"
+        );
+        waitForElementNotPresent(
+                By.xpath("//*[@text='" + searchFirst + "']"),
+                "Cannot delete save list item with title '" + searchFirst + "'",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + searchSecond + "']"),
+                "Cannot delete save list item with title '" + searchSecond + "'",
+                5
+        );
+        String titleAfterDeleteFirstSavedArticle = waitForElementAndGetAttribute(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "text",
+                "Cannot find Article title input",
+                15
+        );
+        Assert.assertEquals(
+                "Article title have been changed after delete first saved article",
+                searchSecond,
+                titleAfterDeleteFirstSavedArticle
+        );
+    }
+
+    private void searchArticleAndOpenViewSaveToList(String searchFirst) {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                searchFirst,
+                "Cannot find 'Search…' input",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id ='org.wikipedia:id/page_list_item_container']//*[@text='" + searchFirst + "']"),
+                "Cannot find '" + searchFirst + "' by search result",
+                5
+        );
+        waitForElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find Article title input",
+                15
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@content-desc='More options']"),
+                "Cannot find 'More options' button",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@text='Add to reading list']"),
+                "Cannot find 'Add to reading list' button",
+                5
+        );
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage) {
         return waitForElementPresent(by, errorMessage, 5);
     }
