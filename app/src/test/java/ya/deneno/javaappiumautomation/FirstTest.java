@@ -552,6 +552,31 @@ public class FirstTest {
         );
     }
 
+    @Test
+    public void assertElementPresent() {
+        String search = "Java (programming language)";
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' input",
+                5
+        );
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                search,
+                "Cannot find 'Search…' input",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id ='org.wikipedia:id/page_list_item_container']//*[@text='" + search + "']"),
+                "Cannot find '" + search + "' by search result",
+                5
+        );
+        isElementPresentAtOnce(
+                By.xpath("//*[@text='" + search + "']"),
+                "Cannot find title with text '" + search + "' at once"
+        );
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage) {
         return waitForElementPresent(by, errorMessage, 5);
     }
@@ -559,6 +584,12 @@ public class FirstTest {
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         sleep();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(errorMessage + "\n");
+        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    private WebElement isElementPresentAtOnce(By by, String errorMessage) {
+        WebDriverWait wait = new WebDriverWait(driver, 0,0);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
