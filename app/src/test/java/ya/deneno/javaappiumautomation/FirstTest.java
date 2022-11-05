@@ -1,53 +1,20 @@
 package ya.deneno.javaappiumautomation;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.net.URL;
 import java.util.List;
 
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
-import io.appium.java_client.android.AndroidDriver;
 
-public class FirstTest {
-    private AppiumDriver driver;
-
-    @Before
-    public void setUp() throws Exception {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "AndroidTestDevice");
-        capabilities.setCapability("platformVersion", "8.0.0");
-        capabilities.setCapability("automationName", "Appium");
-        capabilities.setCapability("appPackage", "org.wikipedia");
-        capabilities.setCapability("appActivity", ".main.MainActivity");
-        capabilities.setCapability("app", "C:/Users/Deneno/Desktop/JavaAppiumAutomation/app/apks/org.wikipedia.apk");
-        driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-        if (driver.getOrientation() != ScreenOrientation.PORTRAIT) {
-            driver.rotate(ScreenOrientation.PORTRAIT);
-        }
-    }
-
-    @After
-    public void tearDown() {
-        driver.quit();
-    }
-
-    @Test
-    public void firstTest() {
-        System.out.println("First test run");
-    }
+public class FirstTest extends CoreTestCase {
 
     @Test
     public void testSearch() {
@@ -127,7 +94,7 @@ public class FirstTest {
     }
 
     @Test
-    public void checkTextForElementSearchField() {
+    public void testCheckTextForElementSearchField() {
         assertElementHasText(
                 By.xpath("//*[@resource-id ='org.wikipedia:id/search_container']//*[@class='android.widget.TextView']"),
                 "Search Wikipedia",
@@ -146,7 +113,7 @@ public class FirstTest {
     }
 
     @Test
-    public void checkCountOfElementsBySearch() {
+    public void testCheckCountOfElementsBySearch() {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
                 "Cannot find 'Search Wikipedia' input",
@@ -179,7 +146,7 @@ public class FirstTest {
     }
 
     @Test
-    public void checkTextElementsBySearch() {
+    public void testCheckTextElementsBySearch() {
         String value = "Java";
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_container"),
@@ -231,7 +198,7 @@ public class FirstTest {
     }
 
     @Test
-    public void saveFirstArticleForMyList() {
+    public void testSaveFirstArticleForMyList() {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
                 "Cannot find 'Search Wikipedia' input",
@@ -441,7 +408,7 @@ public class FirstTest {
     }
 
     @Test
-    public void saveTwoArticleForMyListAndDeleteOne() {
+    public void testSaveTwoArticleForMyListAndDeleteOne() {
         String searchFirst = "Java (programming language)";
         String searchSecond = "Kotlin (programming language)";
         String listName = "Learning programming";
