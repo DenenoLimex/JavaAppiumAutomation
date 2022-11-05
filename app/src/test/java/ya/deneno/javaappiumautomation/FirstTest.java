@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -556,7 +557,7 @@ public class FirstTest {
     }
 
     @Test
-    public void assertElementPresent() {
+    public void testArticleTitlePresentAtOnce() {
         String search = "Java (programming language)";
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -574,9 +575,22 @@ public class FirstTest {
                 "Cannot find '" + search + "' by search result",
                 5
         );
-        isElementPresentAtOnce(
-                By.xpath("//*[@text='" + search + "']"),
-                "Cannot find title with text '" + search + "' at once"
+        assertElementPresent(
+                "Cannot find title with text '" + search + "' at once",
+                By.xpath("//*[@text='" + search + "']")
+        );
+    }
+
+    private void assertElementPresent(String errorMessage, By by) {
+        boolean isElementPresentAtOnce;
+        try {
+            isElementPresentAtOnce = driver.findElement(by).isDisplayed();
+        } catch (NoSuchElementException e) {
+            isElementPresentAtOnce = false;
+        }
+        Assert.assertTrue(
+                errorMessage,
+                isElementPresentAtOnce
         );
     }
 
@@ -587,12 +601,6 @@ public class FirstTest {
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         sleep();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.withMessage(errorMessage + "\n");
-        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
-    }
-
-    private WebElement isElementPresentAtOnce(By by, String errorMessage) {
-        WebDriverWait wait = new WebDriverWait(driver, 0,0);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
