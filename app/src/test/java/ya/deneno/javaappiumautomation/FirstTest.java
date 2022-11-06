@@ -10,18 +10,24 @@ import java.util.List;
 
 import ya.deneno.javaappiumautomation.ui.ArticlePageObject;
 import ya.deneno.javaappiumautomation.ui.MainPageObject;
+import ya.deneno.javaappiumautomation.ui.MyListPageObject;
+import ya.deneno.javaappiumautomation.ui.NavigationUiObject;
 import ya.deneno.javaappiumautomation.ui.SearchPageObject;
 
 public class FirstTest extends CoreTestCase {
     private MainPageObject mainPageObject;
     private SearchPageObject searchPageObject;
     private ArticlePageObject articlePageObject;
+    private NavigationUiObject navigationUiObject;
+    private MyListPageObject myListPageObject;
 
     protected void setUp() throws Exception {
         super.setUp();
         mainPageObject = new MainPageObject(driver);
         searchPageObject = new SearchPageObject(driver);
         articlePageObject = new ArticlePageObject(driver);
+        navigationUiObject = new NavigationUiObject(driver);
+        myListPageObject = new MyListPageObject(driver);
     }
 
     @Test
@@ -142,82 +148,17 @@ public class FirstTest extends CoreTestCase {
 
     @Test
     public void testSaveFirstArticleForMyList() {
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "Cannot find 'Search Wikipedia' input",
-                5
-        );
-        mainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text,'Search…')]"),
-                "Java",
-                "Cannot find 'Search…' input",
-                5
-        );
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[@resource-id ='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
-                "Cannot find search 'Object-oriented programming language' topic searching by 'Java'",
-                5
-        );
-        mainPageObject.waitForElementPresent(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "Cannot find Article title input",
-                15
-        );
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[@content-desc='More options']"),
-                "Cannot find 'More options' button",
-                5
-        );
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[@text='Add to reading list']"),
-                "Cannot find 'Add to reading list' button",
-                5
-        );
-        mainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/onboarding_button"),
-                "Cannot find 'Got it' button",
-                5
-        );
-        mainPageObject.waitForElementAndClear(
-                By.id("org.wikipedia:id/text_input"),
-                "Cannot find 'text_input' field",
-                5
-        );
-        mainPageObject.waitForElementAndSendKeys(
-                By.id("org.wikipedia:id/text_input"),
-                "Learning programming",
-                "Cannot find 'text_input' field",
-                5
-        );
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[@text='OK']"),
-                "Cannot find 'OK' button",
-                5
-        );
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[@content-desc='Navigate up']"),
-                "Cannot find 'X' button",
-                5
-        );
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[@content-desc='My lists']"),
-                "Cannot find 'My lists' button",
-                5
-        );
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[@text='Learning programming']"),
-                "Cannot find list with title 'Learning programming'",
-                5
-        );
-        mainPageObject.swipeElementToLeft(
-                By.xpath("//*[@text='Java (programming language)']"),
-                "Cannot find list item with title 'Java (programming language)'"
-        );
-        mainPageObject.waitForElementNotPresent(
-                By.xpath("//*[@text='Java (programming language)']"),
-                "Cannot delete save list item with title 'Java (programming language)'",
-                5
-        );
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+        articlePageObject.waitForTitleElement();
+        String articleTitle = articlePageObject.getArticleTitle();
+        String nameOfFolder = "Learning programming";
+        articlePageObject.addArticleToMyList(nameOfFolder);
+        articlePageObject.closeArticle();
+        navigationUiObject.clickMyList();
+        myListPageObject.openFolderByName(nameOfFolder);
+        myListPageObject.swipeByArticleToDelete(articleTitle);
     }
 
     @Test
