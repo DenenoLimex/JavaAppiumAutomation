@@ -86,7 +86,7 @@ public class SearchPageObject extends MainPageObject {
         return getAmountOfElements(By.xpath(SEARCH_RESULT_ELEMENT));
     }
 
-    public void waitForEmptyResultLabel(){
+    public void waitForEmptyResultLabel() {
         waitForElementPresent(
                 By.xpath(SEARCH_EMPTY_RESULT_ELEMENT),
                 "Cannot find empty result element",
