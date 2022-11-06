@@ -2,6 +2,8 @@ package ya.deneno.javaappiumautomation.ui;
 
 import org.openqa.selenium.By;
 
+import java.util.Locale;
+
 import io.appium.java_client.AppiumDriver;
 
 public class SearchPageObject extends MainPageObject {
@@ -9,6 +11,7 @@ public class SearchPageObject extends MainPageObject {
     private static final String
             SEARCH_INIT = "//*[contains(@text,'Search Wikipedia')]",
             SEARCH_INPUT = "//*[contains(@text,'Search…')]",
+            SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@resource-id ='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']";
 
 
@@ -41,6 +44,29 @@ public class SearchPageObject extends MainPageObject {
         waitForElementPresent(
                 By.xpath(getResultSearchElement(substring)),
                 "Cannot find search result with substring " + substring
+        );
+    }
+
+    public void waitForCancelButtonToAppear() {
+        waitForElementPresent(
+                By.id(SEARCH_CANCEL_BUTTON),
+                "Cannot find search cancel button"
+        );
+    }
+
+    public void waitForCancelButtonToDisappear() {
+        waitForElementNotPresent(
+                By.id(SEARCH_CANCEL_BUTTON),
+                "Search cancel button is still present",
+                5
+        );
+    }
+
+    public void clickCancelSearch() {
+        waitForElementAndClick(
+                By.id(SEARCH_CANCEL_BUTTON),
+                "Cannot find and click search cancel button",
+                5
         );
     }
 
