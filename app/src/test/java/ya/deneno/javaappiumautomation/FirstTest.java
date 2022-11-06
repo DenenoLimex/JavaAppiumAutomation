@@ -163,54 +163,23 @@ public class FirstTest extends CoreTestCase {
 
     @Test
     public void testAmountOfNotEmptySearch() {
+        searchPageObject.initSearchInput();
         String search = "Linkin Park Discography";
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "Cannot find 'Search Wikipedia' input",
-                5
-        );
-        mainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text,'Search…')]"),
-                search,
-                "Cannot find 'Search…' input",
-                5
-        );
-        String xpath = "//*[@resource-id ='org.wikipedia:id/search_results_list']//*[@resource-id ='org.wikipedia:id/page_list_item_container']";
-        mainPageObject.waitForElementPresent(
-                By.xpath(xpath),
-                "Cannot find 'page_list_item_container' input for value = " + search,
-                15
-        );
+        searchPageObject.typeSearchLine(search);
+        searchPageObject.getAmountOfFoundArticles();
         Assert.assertTrue(
                 "Count of element is 0",
-                mainPageObject.getAmountOfElements(By.xpath(xpath)) > 0
+                searchPageObject.getAmountOfFoundArticles() > 0
         );
     }
 
     @Test
     public void testAmountOfEmptySearch() {
+        searchPageObject.initSearchInput();
         String search = "zxvzxvzxcvzxcvzxcv";
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "Cannot find 'Search Wikipedia' input",
-                5
-        );
-        mainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text,'Search…')]"),
-                search,
-                "Cannot find 'Search…' input",
-                5
-        );
-        mainPageObject.waitForElementPresent(
-                By.xpath("//*[@text='No results found']"),
-                "Cannot find 'No results found'",
-                15
-        );
-        String xpath = "//*[@resource-id ='org.wikipedia:id/search_results_list']//*[@resource-id ='org.wikipedia:id/page_list_item_container']";
-        mainPageObject.assertElementNotPresent(
-                By.xpath(xpath),
-                "Count of element with request '" + search + "' > 0"
-        );
+        searchPageObject.typeSearchLine(search);
+        searchPageObject.waitForEmptyResultLabel();
+        searchPageObject.assertThereIsNoResultOfSearch();
     }
 
     @Test
