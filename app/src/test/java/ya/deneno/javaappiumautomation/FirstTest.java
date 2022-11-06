@@ -8,20 +8,24 @@ import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
+import ya.deneno.javaappiumautomation.ui.ArticlePageObject;
 import ya.deneno.javaappiumautomation.ui.MainPageObject;
 import ya.deneno.javaappiumautomation.ui.SearchPageObject;
 
 public class FirstTest extends CoreTestCase {
     private MainPageObject mainPageObject;
+    private SearchPageObject searchPageObject;
+    private ArticlePageObject articlePageObject;
 
     protected void setUp() throws Exception {
         super.setUp();
         mainPageObject = new MainPageObject(driver);
+        searchPageObject = new SearchPageObject(driver);
+        articlePageObject = new ArticlePageObject(driver);
     }
 
     @Test
     public void testSearch() {
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
         searchPageObject.waitForSearchResult("Object-oriented programming language");
@@ -29,7 +33,6 @@ public class FirstTest extends CoreTestCase {
 
     @Test
     public void testCancelSearch() {
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.waitForCancelButtonToAppear();
         searchPageObject.clickCancelSearch();
@@ -38,29 +41,24 @@ public class FirstTest extends CoreTestCase {
 
     @Test
     public void testCompareArticleTitle() {
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "Cannot find 'Search Wikipedia' input",
-                5
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+        String articleTitle = articlePageObject.getArticleTitle();
+        Assert.assertEquals(
+                "We see unexpected title!",
+                articleTitle,
+                "Java (programming language)"
         );
-        mainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text,'Search…')]"),
-                "Java",
-                "Cannot find 'Search…' input",
-                5
-        );
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[@resource-id ='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
-                "Cannot find search 'Object-oriented programming language' topic searching by 'Java'",
-                5
-        );
-        WebElement titleElement = mainPageObject.waitForElementPresent(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "Cannot find Article title input",
-                15
-        );
-        String titleArticle = titleElement.getAttribute("text");
-        Assert.assertEquals("Article title not equals", titleArticle, "Java (programming language)");
+    }
+
+    @Test
+    public void testSwipeArticle() {
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Appium");
+        searchPageObject.clickByArticleWithSubstring("Appium");
+        articlePageObject.waitForTitleElement();
+        articlePageObject.swipeToFooter();
     }
 
     @Test
@@ -140,31 +138,6 @@ public class FirstTest extends CoreTestCase {
                     element.getAttribute("text").contains(value)
             );
         }
-    }
-
-    @Test
-    public void testSwipeArticle() {
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
-                "Cannot find 'Search Wikipedia' input",
-                5
-        );
-        mainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text,'Search…')]"),
-                "Appium",
-                "Cannot find 'Search…' input",
-                5
-        );
-        mainPageObject.waitForElementAndClick(
-                By.xpath("//*[@resource-id ='org.wikipedia:id/page_list_item_title'][@text='Appium']"),
-                "Cannot find search 'Appium' topic searching by 'Appium'",
-                5
-        );
-        mainPageObject.swipeUpToFindElement(
-                By.xpath("//*[@text='View page in browser']"),
-                "Can't find the end of the article",
-                20
-        );
     }
 
     @Test

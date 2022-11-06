@@ -2,12 +2,9 @@ package ya.deneno.javaappiumautomation.ui;
 
 import org.openqa.selenium.By;
 
-import java.util.Locale;
-
 import io.appium.java_client.AppiumDriver;
 
 public class SearchPageObject extends MainPageObject {
-    protected AppiumDriver driver;
     private static final String
             SEARCH_INIT = "//*[contains(@text,'Search Wikipedia')]",
             SEARCH_INPUT = "//*[contains(@text,'Search…')]",
@@ -44,6 +41,14 @@ public class SearchPageObject extends MainPageObject {
         waitForElementPresent(
                 By.xpath(getResultSearchElement(substring)),
                 "Cannot find search result with substring " + substring
+        );
+    }
+
+    public void clickByArticleWithSubstring(String substring) {
+        waitForElementAndClick(
+                By.xpath(getResultSearchElement(substring)),
+                "Cannot find and click search result with substring " + substring,
+                10
         );
     }
 
