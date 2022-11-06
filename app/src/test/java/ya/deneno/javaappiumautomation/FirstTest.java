@@ -1,6 +1,5 @@
 package ya.deneno.javaappiumautomation;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -8,63 +7,14 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 import ya.deneno.javaappiumautomation.ui.ArticlePageObject;
-import ya.deneno.javaappiumautomation.ui.MainPageObject;
 import ya.deneno.javaappiumautomation.ui.MyListPageObject;
 import ya.deneno.javaappiumautomation.ui.NavigationUiObject;
 import ya.deneno.javaappiumautomation.ui.SearchPageObject;
 
 public class FirstTest extends CoreTestCase {
-    private MainPageObject mainPageObject;
-    private SearchPageObject searchPageObject;
-    private ArticlePageObject articlePageObject;
-    private NavigationUiObject navigationUiObject;
-    private MyListPageObject myListPageObject;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        mainPageObject = new MainPageObject(driver);
-        searchPageObject = new SearchPageObject(driver);
-        articlePageObject = new ArticlePageObject(driver);
-        navigationUiObject = new NavigationUiObject(driver);
-        myListPageObject = new MyListPageObject(driver);
-    }
 
-    @Test
-    public void testSearch() {
-        searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Java");
-        searchPageObject.waitForSearchResult("Object-oriented programming language");
-    }
 
-    @Test
-    public void testCancelSearch() {
-        searchPageObject.initSearchInput();
-        searchPageObject.waitForCancelButtonToAppear();
-        searchPageObject.clickCancelSearch();
-        searchPageObject.waitForCancelButtonToDisappear();
-    }
-
-    @Test
-    public void testCompareArticleTitle() {
-        searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Java");
-        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
-        String articleTitle = articlePageObject.getArticleTitle();
-        Assert.assertEquals(
-                "We see unexpected title!",
-                articleTitle,
-                "Java (programming language)"
-        );
-    }
-
-    @Test
-    public void testSwipeArticle() {
-        searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Appium");
-        searchPageObject.clickByArticleWithSubstring("Appium");
-        articlePageObject.waitForTitleElement();
-        articlePageObject.swipeToFooter();
-    }
 
     @Test
     public void testCheckTextForElementSearchField() {
@@ -98,7 +48,7 @@ public class FirstTest extends CoreTestCase {
                 "Cannot find 'Search…' input",
                 5
         );
-        Assert.assertTrue(
+        assertTrue(
                 "Count of element < 2",
                 mainPageObject.waitForAllElementsPresent(
                         By.xpath("//*[@resource-id ='org.wikipedia:id/page_list_item_container']"),
@@ -138,79 +88,16 @@ public class FirstTest extends CoreTestCase {
                 5
         );
         for (WebElement element : elements) {
-            Assert.assertTrue(
+            assertTrue(
                     "Some of search result not contains '" + value + "'",
                     element.getAttribute("text").contains(value)
             );
         }
     }
 
-    @Test
-    public void testSaveFirstArticleForMyList() {
-        searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Java");
-        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
-        articlePageObject.waitForTitleElement();
-        String articleTitle = articlePageObject.getArticleTitle();
-        String nameOfFolder = "Learning programming";
-        articlePageObject.addArticleToMyList(nameOfFolder);
-        articlePageObject.closeArticle();
-        navigationUiObject.clickMyList();
-        myListPageObject.openFolderByName(nameOfFolder);
-        myListPageObject.swipeByArticleToDelete(articleTitle);
-    }
 
-    @Test
-    public void testAmountOfNotEmptySearch() {
-        searchPageObject.initSearchInput();
-        String search = "Linkin Park Discography";
-        searchPageObject.typeSearchLine(search);
-        searchPageObject.getAmountOfFoundArticles();
-        Assert.assertTrue(
-                "Count of element is 0",
-                searchPageObject.getAmountOfFoundArticles() > 0
-        );
-    }
 
-    @Test
-    public void testAmountOfEmptySearch() {
-        searchPageObject.initSearchInput();
-        String search = "zxvzxvzxcvzxcvzxcv";
-        searchPageObject.typeSearchLine(search);
-        searchPageObject.waitForEmptyResultLabel();
-        searchPageObject.assertThereIsNoResultOfSearch();
-    }
 
-    @Test
-    public void testChangeScreenOrientationOnSearchResults() {
-        searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Java");
-        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
-        String titleBeforeRotation = articlePageObject.getArticleTitle();
-        rotateScreenLandscape();
-        String titleAfterRotation = articlePageObject.getArticleTitle();
-        Assert.assertEquals(
-                "Article title have been changed after rotation",
-                titleAfterRotation,
-                titleBeforeRotation
-        );
-        rotateScreenPortrait();
-        String titleAfterSecondRotation = articlePageObject.getArticleTitle();
-        Assert.assertEquals(
-                "Article title have been changed after rotation",
-                titleAfterRotation,
-                titleAfterSecondRotation
-        );
-    }
-
-    @Test
-    public void testCheckSearchArticleInBackground() {
-        searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Java");
-        searchPageObject.waitForSearchResult("Object-oriented programming language");
-        backgroundApp(2);
-        searchPageObject.waitForSearchResult("Object-oriented programming language");
-    }
 
     @Test
     public void testSaveTwoArticleForMyListAndDeleteOne() {
@@ -287,7 +174,7 @@ public class FirstTest extends CoreTestCase {
                 "Cannot find Article title input",
                 15
         );
-        Assert.assertEquals(
+        assertEquals(
                 "Article title have been changed after delete first saved article",
                 searchSecond,
                 titleAfterDeleteFirstSavedArticle
