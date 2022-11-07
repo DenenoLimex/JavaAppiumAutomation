@@ -104,4 +104,8 @@ public class ArticlePageObject extends MainPageObject {
     private static String getFolderNameElement(String nameOfFolder) {
         return ADD_TO_MY_LIST_AFTER_ON_BOARDING.replace("{FOLDER_NAME}", nameOfFolder);
     }
+
+    public int getTitleElementAtOnce() {
+        return getAmountOfElements(By.xpath(TITLE));
+    }
 }

@@ -20,19 +20,6 @@ public class MainPageObject {
         this.driver = driver;
     }
 
-    public void assertElementPresent(String errorMessage, By by) {
-        boolean isElementPresentAtOnce;
-        try {
-            isElementPresentAtOnce = driver.findElement(by).isDisplayed();
-        } catch (NoSuchElementException e) {
-            isElementPresentAtOnce = false;
-        }
-        Assert.assertTrue(
-                errorMessage,
-                isElementPresentAtOnce
-        );
-    }
-
     public WebElement waitForElementPresent(By by, String errorMessage) {
         return waitForElementPresent(by, errorMessage, 5);
     }

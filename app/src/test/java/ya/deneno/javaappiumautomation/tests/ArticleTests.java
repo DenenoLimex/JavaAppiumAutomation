@@ -26,4 +26,16 @@ public class ArticleTests extends CoreTestCase {
         articlePageObject.waitForTitleElement();
         articlePageObject.swipeToFooter();
     }
+
+    @Test
+    public void testArticleTitlePresentAtOnce() {
+        String search = "Java (programming language)";
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(search);
+        searchPageObject.clickByArticleWithSubstring(search);
+        assertTrue(
+                "Cannot find title with text '" + search + "' at once",
+                articlePageObject.getTitleElementAtOnce() != 0
+        );
+    }
 }
