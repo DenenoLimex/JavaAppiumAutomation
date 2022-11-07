@@ -105,11 +105,6 @@ public class SearchPageObject extends MainPageObject {
                 "We supposed not to find any results"
         );
     }
-
-    private static String getResultSearchElement(String substring) {
-        return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}", substring);
-    }
-
     public void assertTextElementsBySearch(String value) {
         List<WebElement> elements = waitForAllElementsPresent(
                 By.xpath(SEARCH_RESULT_ELEMENT_ARTICLE_TITLE),
@@ -123,4 +118,9 @@ public class SearchPageObject extends MainPageObject {
             );
         }
     }
+
+    private static String getResultSearchElement(String substring) {
+        return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}", substring);
+    }
+
 }
