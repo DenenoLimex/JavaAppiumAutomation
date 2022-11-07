@@ -1,6 +1,10 @@
 package ya.deneno.javaappiumautomation.ui;
 
+import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 import io.appium.java_client.AppiumDriver;
 
@@ -11,8 +15,8 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_INPUT = "//*[contains(@text,'Search…')]",
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@resource-id ='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']",
-            SEARCH_RESULT_ELEMENT = "//*[@resource-id ='org.wikipedia:id/search_results_list']//*[@resource-id ='org.wikipedia:id/page_list_item_container']";
-
+            SEARCH_RESULT_ELEMENT = "//*[@resource-id ='org.wikipedia:id/search_results_list']//*[@resource-id ='org.wikipedia:id/page_list_item_container']",
+            SEARCH_RESULT_ELEMENT_ARTICLE_TITLE = "//*[@resource-id ='org.wikipedia:id/page_list_item_title']";
 
     public SearchPageObject(AppiumDriver driver) {
         super(driver);
@@ -104,5 +108,19 @@ public class SearchPageObject extends MainPageObject {
 
     private static String getResultSearchElement(String substring) {
         return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}", substring);
+    }
+
+    public void assertTextElementsBySearch(String value) {
+        List<WebElement> elements = waitForAllElementsPresent(
+                By.xpath(SEARCH_RESULT_ELEMENT_ARTICLE_TITLE),
+                "Result of search is empty",
+                5
+        );
+        for (WebElement element : elements) {
+            Assert.assertTrue(
+                    "Some of search result not contains '" + value + "'",
+                    element.getAttribute("text").contains(value)
+            );
+        }
     }
 }

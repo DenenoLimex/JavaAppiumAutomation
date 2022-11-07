@@ -53,4 +53,12 @@ public class SearchTests extends CoreTestCase {
         searchPageObject.clickCancelSearch();
         searchPageObject.assertThereIsNoResultOfSearch();
     }
+
+    @Test
+    public void testCheckTextElementsBySearch() {
+        String value = "Java";
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(value);
+        searchPageObject.assertTextElementsBySearch(value);
+    }
 }
