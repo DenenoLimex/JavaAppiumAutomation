@@ -40,4 +40,17 @@ public class SearchTests extends CoreTestCase {
         searchPageObject.waitForEmptyResultLabel();
         searchPageObject.assertThereIsNoResultOfSearch();
     }
+
+    @Test
+    public void testCheckCountOfElementsBySearch() {
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.getAmountOfFoundArticles();
+        assertTrue(
+                "Count of element < 2",
+                searchPageObject.getAmountOfFoundArticles() > 1
+        );
+        searchPageObject.clickCancelSearch();
+        searchPageObject.assertThereIsNoResultOfSearch();
+    }
 }
