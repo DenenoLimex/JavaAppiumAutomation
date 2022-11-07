@@ -19,4 +19,27 @@ public class MyListsTests extends CoreTestCase {
         myListPageObject.openFolderByName(nameOfFolder);
         myListPageObject.swipeByArticleToDelete(articleTitle);
     }
+
+
+    @Test
+    public void testSaveTwoArticleForMyListAndDeleteOne() {
+        String searchFirst = "Java (programming language)";
+        String searchSecond = "Kotlin (programming language)";
+        String nameOfFolder = "Learning programming";
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(searchFirst);
+        searchPageObject.clickByArticleWithSubstring(searchFirst);
+        articlePageObject.addArticleToMyList(nameOfFolder);
+        articlePageObject.closeArticle();
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(searchSecond);
+        searchPageObject.clickByArticleWithSubstring(searchSecond);
+        articlePageObject.addArticleToMyListAfterOnBoarding(nameOfFolder);
+        articlePageObject.closeArticle();
+        navigationUiObject.clickMyList();
+        myListPageObject.openFolderByName(nameOfFolder);
+        myListPageObject.swipeByArticleToDelete(searchFirst);
+        myListPageObject.waitForArticleToDisappearByTitle(searchFirst);
+        myListPageObject.waitForArticleToAppearByTitle(searchSecond);
+    }
 }

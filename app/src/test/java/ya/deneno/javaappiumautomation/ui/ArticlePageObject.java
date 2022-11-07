@@ -12,6 +12,7 @@ public class ArticlePageObject extends MainPageObject {
             OPTIONS_BUTTON = "//*[@content-desc='More options']",
             OPTIONS_ADD_TO_MY_LIST_BUTTON = "//*[@text='Add to reading list']",
             ADD_TO_MY_LIST_OVERLAY = "org.wikipedia:id/onboarding_button",
+            ADD_TO_MY_LIST_AFTER_ON_BOARDING = "//*[@resource-id ='org.wikipedia:id/item_container']//*[@text='{FOLDER_NAME}']",
             MY_LIST_MAIN_INPUT = "org.wikipedia:id/text_input",
             MY_LIST_OK_BUTTON = "//*[@text='OK']",
             CLOSE_ARTICLE_BUTTON = "//*[@content-desc='Navigate up']";
@@ -74,11 +75,33 @@ public class ArticlePageObject extends MainPageObject {
         );
     }
 
+    public void addArticleToMyListAfterOnBoarding(String nameOfFolder) {
+        waitForElementAndClick(
+                By.xpath(OPTIONS_BUTTON),
+                "Cannot find 'More options' button",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath(OPTIONS_ADD_TO_MY_LIST_BUTTON),
+                "Cannot find 'Add to reading list' button",
+                5
+        );
+        waitForElementAndClick(
+                By.xpath(getFolderNameElement(nameOfFolder)),
+                "Cannot find list with name '" + nameOfFolder + "'",
+                5
+        );
+    }
+
     public void closeArticle() {
         waitForElementAndClick(
                 By.xpath(CLOSE_ARTICLE_BUTTON),
                 "Cannot find 'X' button",
                 5
         );
+    }
+
+    private static String getFolderNameElement(String nameOfFolder) {
+        return ADD_TO_MY_LIST_AFTER_ON_BOARDING.replace("{FOLDER_NAME}", nameOfFolder);
     }
 }
