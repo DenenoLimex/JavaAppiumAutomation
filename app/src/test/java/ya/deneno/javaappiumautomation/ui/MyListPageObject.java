@@ -23,8 +23,8 @@ public class MyListPageObject extends MainPageObject {
     }
 
     public void swipeByArticleToDelete(String articleTitle) {
+        waitForArticleToAppearByTitle(articleTitle);
         String articleTitleXpath = getSavedArticleXpathByTitle(articleTitle);
-        waitForArticleToAppearByTitle(articleTitleXpath);
         swipeElementToLeft(
                 By.xpath(articleTitleXpath),
                 "Cannot find saved article"
@@ -33,7 +33,7 @@ public class MyListPageObject extends MainPageObject {
     }
 
     public void waitForArticleToAppearByTitle(String articleTitle) {
-        waitForElementNotPresent(
+        waitForElementPresent(
                 By.xpath(getSavedArticleXpathByTitle(articleTitle)),
                 "Cannot find saved article with title " + articleTitle,
                 5
