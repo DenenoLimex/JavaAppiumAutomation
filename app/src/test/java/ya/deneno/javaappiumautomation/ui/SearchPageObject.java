@@ -15,6 +15,7 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_INPUT = "//*[contains(@text,'Search…')]",
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@resource-id ='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']",
+            SEARCH_RESULT_BY_TITLE_AND_SUBSTRING_TPL = "//*[@resource-id ='org.wikipedia:id/page_list_item_container']//*[@text='{TITLE}']/../..//*[@text='{DESCRIPTION}']/../..",
             SEARCH_RESULT_ELEMENT = "//*[@resource-id ='org.wikipedia:id/search_results_list']//*[@resource-id ='org.wikipedia:id/page_list_item_container']",
             SEARCH_RESULT_ELEMENT_ARTICLE_TITLE = "//*[@resource-id ='org.wikipedia:id/page_list_item_title']";
 
@@ -120,7 +121,21 @@ public class SearchPageObject extends MainPageObject {
         }
     }
 
+    public void waitForElementByTitleAndDescription(String title, String description) {
+        waitForElementPresent(
+                By.xpath(getResultSearchElement(title, description)),
+                "Cannot find result with title = " + title + " and description = " + description,
+                15
+        );
+    }
+
     private static String getResultSearchElement(String substring) {
         return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}", substring);
+    }
+
+    private static String getResultSearchElement(String title, String description) {
+        return SEARCH_RESULT_BY_TITLE_AND_SUBSTRING_TPL
+                .replace("{TITLE}", title)
+                .replace("{DESCRIPTION}", description);
     }
 }

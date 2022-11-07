@@ -7,9 +7,12 @@ import ya.deneno.javaappiumautomation.CoreTestCase;
 public class SearchTests extends CoreTestCase {
     @Test
     public void testSearch() {
+        String search = "Java";
+        String title = "Java (programming language)";
+        String description = "Object-oriented programming language";
         searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Java");
-        searchPageObject.waitForSearchResult("Object-oriented programming language");
+        searchPageObject.typeSearchLine(search);
+        searchPageObject.waitForElementByTitleAndDescription(title, description);
     }
 
     @Test
@@ -60,5 +63,21 @@ public class SearchTests extends CoreTestCase {
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(value);
         searchPageObject.assertTextElementsBySearch(value);
+    }
+
+    @Test
+    public void testCheckTitleAndDesriptionOfElementsBySearch() {
+        String search = "Room";
+        String firstTitle = "Room";
+        String firstDescription = "Distinguishable space within a building or other structure";
+        String secondTitle = "Room (2015 film)";
+        String secondDescription = "2015 film by Lenny Abrahamson";
+        String thirdTitle = "Roomba";
+        String thirdDescription = "Series of autonomous robotic vacuum cleaners sold by iRobot";
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(search);
+        searchPageObject.waitForElementByTitleAndDescription(firstTitle, firstDescription);
+        searchPageObject.waitForElementByTitleAndDescription(secondTitle, secondDescription);
+        searchPageObject.waitForElementByTitleAndDescription(thirdTitle, thirdDescription);
     }
 }
