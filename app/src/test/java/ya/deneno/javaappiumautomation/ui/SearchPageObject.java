@@ -105,6 +105,7 @@ public class SearchPageObject extends MainPageObject {
                 "We supposed not to find any results"
         );
     }
+
     public void assertTextElementsBySearch(String value) {
         List<WebElement> elements = waitForAllElementsPresent(
                 By.xpath(SEARCH_RESULT_ELEMENT_ARTICLE_TITLE),
