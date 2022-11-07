@@ -19,14 +19,14 @@ public class SearchPageObject extends MainPageObject {
     }
 
     public void initSearchInput() {
+        waitForElementPresent(
+                By.xpath(SEARCH_INIT),
+                "Cannot find and click search init element"
+        );
         waitForElementAndClick(
                 By.xpath(SEARCH_INIT),
                 "Cannot find and click search init element",
                 5
-        );
-        waitForElementPresent(
-                By.xpath(SEARCH_INIT),
-                "Cannot find and click search init element"
         );
     }
 
